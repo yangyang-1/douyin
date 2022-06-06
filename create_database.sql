@@ -1,0 +1,54 @@
+CREATE DATABASE IF NOT EXISTS `douyin`;
+USE `douyin`;
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`(
+    `id` BIGINT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(32) NOT NULL COMMENT'用户名',
+    `password` VARCHAR(32) NOT NULL COMMENT'密码',
+    `follow_count` BIGINT(10) DEFAULT 0 COMMENT'关注数',
+    `follower_count` BIGINT(10) DEFAULT 0 COMMENT'粉丝数',
+    PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+DROP TABLE IF EXISTS `video`;
+CREATE TABLE `video`(
+    `id` BIGINT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `author_id` BIGINT(10) UNSIGNED NOT NULL COMMENT'发布者用户id',
+    `play_url` VARCHAR(255) NOT NULL COMMENT '播放地址',
+    `cover_url` VARCHAR(255) NOT NULL COMMENT '封面地址',
+    `created_on` timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `favorite_count` BIGINT(10) NOT NULL DEFAULT 0 COMMENT '点赞数',
+    `comment_count` BIGINT(10) NOT NULL DEFAULT 0 COMMENT '评论数',
+    `title`  VARCHAR(255) NOT NULL COMMENT '视频标题',
+    PRIMARY KEY(`id`),
+    FOREIGN KEY(`author_id`) REFERENCES user(`id`),
+    INDEX author_id (`author_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频表';
+
+DROP TABLE IF EXISTS `favorite`;
+CREATE TABLE `favorite`(
+    `id` BIGINT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT(10) UNSIGNED NOT NULL COMMENT '点赞用户id',
+    `video_id` BIGINT(10) UNSIGNED NOT NULL COMMENT '点赞视频id',
+    PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT'点赞表';
+
+DROP TABLE IF EXISTS `relation`;
+CREATE TABLE `relation`(
+    `id` BIGINT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT(10) UNSIGNED NOT NULL COMMENT '被关注id',
+    `follower_id` BIGINT(10) UNSIGNED NOT NULL COMMENT '关注者id',
+    PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET =utf8mb4 COMMENT'用户关系表';
+
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment`(
+    `id` BIGINT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`user_id` BIGINT(10) UNSIGNED NOT NULL COMMENT '评论用户id',
+	`video_id` BIGINT(10) UNSIGNED NOT NULL COMMENT '评论视频id',
+	`comment_text` text COMMENT '评论内容',
+	`created_on` VARCHAR(25) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评论表';
+
+
